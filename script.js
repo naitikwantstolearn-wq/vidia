@@ -135,97 +135,97 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.fade-in-section').forEach(section => { observer.observe(section); });
 
 
-    // ===================================================================================
-    // == NETLIFY FORMS INTEGRATION: New code for form submission ==
-    // ===================================================================================
+ // ===================================================================================
+// == NETLIFY FORMS INTEGRATION: Form submission handler ==
+// ===================================================================================
 
-    const contactForm = document.getElementById('contactForm');
-    const formMessage = document.getElementById('formMessage'); // For in-form messages
-    const submissionPopup = document.getElementById('submission-popup'); // For the pop-up
+document.addEventListener("DOMContentLoaded", () => {
+  const contactForm = document.getElementById("contactForm");
+  const formMessage = document.getElementById("formMessage"); // Inline feedback
+  const submissionPopup = document.getElementById("submission-popup"); // Pop-up message
 
-    if (contactForm) {
-        contactForm.addEventListener('submit', async (event) => {
-            event.preventDefault(); // Prevents default form submission to handle it via fetch
+  if (contactForm) {
+    contactForm.addEventListener("submit", async (event) => {
+      event.preventDefault(); // Prevent default form submission
 
-            formMessage.textContent = 'Sending...';
-            formMessage.style.color = 'blue';
+      formMessage.textContent = "Sending...";
+      formMessage.style.color = "blue";
 
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const message = document.getElementById('message').value;
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const message = document.getElementById("message").value.trim();
 
-            // Basic client-side validation
-            if (!name || !email || !message) {
-                formMessage.textContent = 'Please fill in all fields.';
-                formMessage.style.color = 'red';
-                return;
-            }
+      // Basic client-side validation
+      if (!name || !email || !message) {
+        formMessage.textContent = "Please fill in all fields.";
+        formMessage.style.color = "red";
+        return;
+      }
 
-            // Create FormData object from the form
-            const formData = new FormData(contactForm);
+      // Create FormData object from the form
+      const formData = new FormData(contactForm);
 
-            try {
-                // Submit the form data to Netlify Forms endpoint using fetch
-                // The URL '/' tells Netlify to process the form on the current page
-                const response = await fetch('/', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (response.ok) {
-                    console.log('Form submitted successfully to Netlify.');
-                    formMessage.textContent = ''; // Clear in-form message for pop-up clarity
-                    contactForm.reset(); // Clear the form on successful submission
-
-                    // Show the success pop-up
-                    if (submissionPopup) {
-                        submissionPopup.textContent = 'Message sent successfully!';
-                        submissionPopup.style.backgroundColor = '#28a745'; // Green for success
-                        submissionPopup.style.opacity = '1';
-                        submissionPopup.style.visibility = 'visible';
-
-                        setTimeout(() => {
-                            submissionPopup.style.opacity = '0';
-                            submissionPopup.style.visibility = 'hidden';
-                        }, 2000); // Hide after 2 seconds
-                    }
-                } else {
-                    const errorText = await response.text(); // Try to get more detailed error
-                    console.error('Netlify Form submission error:', response.status, errorText);
-                    formMessage.textContent = `Error submitting form. Status: ${response.status}. Please try again.`;
-                    formMessage.style.color = 'red';
-
-                    // Show error pop-up
-                    if (submissionPopup) {
-                        submissionPopup.textContent = `Error: ${response.status}. Please try again.`;
-                        submissionPopup.style.backgroundColor = '#dc3545'; // Red for error
-                        submissionPopup.style.opacity = '1';
-                        submissionPopup.style.visibility = 'visible';
-                        setTimeout(() => {
-                            submissionPopup.style.opacity = '0';
-                            submissionPopup.style.visibility = 'hidden';
-                        }, 3000); // Keep error messages a bit longer
-                    }
-                }
-            } catch (error) {
-                console.error('Network or unexpected error during submission:', error);
-                formMessage.textContent = 'An unexpected error occurred. Check your network connection.';
-                formMessage.style.color = 'red';
-
-                // Also show unexpected error in pop-up
-                if (submissionPopup) {
-                    submissionPopup.textContent = 'An unexpected error occurred!';
-                    submissionPopup.style.backgroundColor = '#dc3545'; // Red for error
-                    submissionPopup.style.opacity = '1';
-                    submissionPopup.style.visibility = 'visible';
-                    setTimeout(() => {
-                        submissionPopup.style.opacity = '0';
-                        submissionPopup.style.visibility = 'hidden';
-                    }, 3000); // Keep error messages a bit longer
-                }
-            }
+      try {
+        // Submit form data to Netlify Forms
+        const response = await fetch("/", {
+          method: "POST",
+          body: formData,
         });
-    } else {
-        console.error("Form with ID 'contactForm' not found, Netlify Forms integration aborted.");
-    }
+
+        if (response.ok) {
+          console.log("Form submitted successfully to Netlify.");
+          formMessage.textContent = ""; // Clear inline text
+          contactForm.reset(); // Reset the form
+
+          // Show success popup
+          if (submissionPopup) {
+            submissionPopup.textContent = "Message sent successfully!";
+            submissionPopup.style.backgroundColor = "#28a745"; // Green
+            submissionPopup.style.opacity = "1";
+            submissionPopup.style.visibility = "visible";
+
+            setTimeout(() => {
+              submissionPopup.style.opacity = "0";
+              submissionPopup.style.visibility = "hidden";
+            }, 2000);
+          }
+        } else {
+          const errorText = await response.text();
+          console.error("Netlify Form submission error:", response.status, errorText);
+
+          formMessage.textContent = `Error submitting form. Status: ${response.status}`;
+          formMessage.style.color = "red";
+
+          // Show error popup
+          if (submissionPopup) {
+            submissionPopup.textContent = `Error: ${response.status}`;
+            submissionPopup.style.backgroundColor = "#dc3545"; // Red
+            submissionPopup.style.opacity = "1";
+            submissionPopup.style.visibility = "visible";
+            setTimeout(() => {
+              submissionPopup.style.opacity = "0";
+              submissionPopup.style.visibility = "hidden";
+            }, 3000);
+          }
+        }
+      } catch (error) {
+        console.error("Network error during submission:", error);
+        formMessage.textContent = "Network error. Please try again.";
+        formMessage.style.color = "red";
+
+        if (submissionPopup) {
+          submissionPopup.textContent = "Network error!";
+          submissionPopup.style.backgroundColor = "#dc3545"; // Red
+          submissionPopup.style.opacity = "1";
+          submissionPopup.style.visibility = "visible";
+          setTimeout(() => {
+            submissionPopup.style.opacity = "0";
+            submissionPopup.style.visibility = "hidden";
+          }, 3000);
+        }
+      }
+    });
+  } else {
+    console.error("Form with ID 'contactForm' not found, Netlify Forms integration aborted.");
+  }
 });
