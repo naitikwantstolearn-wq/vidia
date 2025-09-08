@@ -41,15 +41,43 @@ document.addEventListener('DOMContentLoaded', () => {
         const bannerContainer = document.querySelector('#header-slideshow .slides-container');
         if (bannerContainer) { imageData.banners.forEach(src => {
             const slide = document.createElement('div'); slide.className = 'slide';
-            slide.innerHTML = `<img src="${src}" alt="Promotional Banner">`;
+            // FIX: Added inline styles for basic image display
+            slide.innerHTML = `<img src="${src}" alt="Promotional Banner" style="width: 100%; height: auto; display: block;">`;
             bannerContainer.appendChild(slide); });
         }
-        document.querySelector('[data-img-id="header-slider-before"]')?.setAttribute('src', imageData.headerSlider.before);
-        document.querySelector('[data-img-id="header-slider-after"]')?.setAttribute('src', imageData.headerSlider.after);
-        document.querySelector('[data-img-id="btob-before"]')?.setAttribute('src', imageData.boringToBright.before);
+
+        // FIX: Added explicit styles for these images for basic display
+        const headerSliderBefore = document.querySelector('[data-img-id="header-slider-before"]');
+        if (headerSliderBefore) {
+            headerSliderBefore.setAttribute('src', imageData.headerSlider.before);
+            headerSliderBefore.style.width = '100%';
+            headerSliderBefore.style.height = 'auto';
+            headerSliderBefore.style.display = 'block';
+        }
+
+        const headerSliderAfter = document.querySelector('[data-img-id="header-slider-after"]');
+        if (headerSliderAfter) {
+            headerSliderAfter.setAttribute('src', imageData.headerSlider.after);
+            headerSliderAfter.style.width = '100%';
+            headerSliderAfter.style.height = 'auto';
+            headerSliderAfter.style.display = 'block';
+        }
+
+        const btobBefore = document.querySelector('[data-img-id="btob-before"]');
+        if (btobBefore) {
+            btobBefore.setAttribute('src', imageData.boringToBright.before);
+            btobBefore.style.width = '100%';
+            btobBefore.style.height = 'auto';
+            btobBefore.style.display = 'block';
+        }
+        
         const btobAfterCatalog = document.querySelector('[data-catalog-id="btob-after"]');
         if (btobAfterCatalog) { imageData.boringToBright.after.forEach((src, index) => {
             const img = document.createElement('img'); img.src = src;
+            // FIX: Added inline styles for basic image display
+            img.style.width = '100%';
+            img.style.height = 'auto';
+            img.style.display = 'block';
             if (index === 0) img.className = 'active';
             btobAfterCatalog.appendChild(img); });
         }
@@ -59,7 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const itemsHtml = [];
             for (let i = 0; i < imageArray.length; i += 2) {
                 const img1 = imageArray[i]; const img2 = imageArray[i + 1] || img1;
-                itemsHtml.push(`<div class="catalog"><img src="${img1}" class="active" alt="${carouselId} image"><img src="${img2}" alt="${carouselId} image"></div>`);
+                // FIX: Added inline styles for basic image display
+                itemsHtml.push(`<div class="catalog"><img src="${img1}" class="active" alt="${carouselId} image" style="width: 100%; height: auto; display: block;"><img src="${img2}" alt="${carouselId} image" style="width: 100%; height: auto; display: block;"></div>`);
             }
             carousel.innerHTML = itemsHtml.join('') + itemsHtml.join('');
         }
