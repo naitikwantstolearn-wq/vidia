@@ -41,40 +41,27 @@ document.addEventListener('DOMContentLoaded', () => {
         const bannerContainer = document.querySelector('#header-slideshow .slides-container');
         if (bannerContainer) { imageData.banners.forEach(src => {
             const slide = document.createElement('div'); slide.className = 'slide';
-            // FIX: Added inline styles for basic image display
             slide.innerHTML = `<img src="${src}" alt="Promotional Banner" style="width: 100%; height: auto; display: block;">`;
             bannerContainer.appendChild(slide); });
         }
+        document.querySelector('[data-img-id="header-slider-before"]')?.setAttribute('src', imageData.headerSlider.before);
+        document.querySelector('[data-img-id="header-slider-before"]')?.style.setProperty('width', '100%');
+        document.querySelector('[data-img-id="header-slider-before"]')?.style.setProperty('height', 'auto');
+        document.querySelector('[data-img-id="header-slider-before"]')?.style.setProperty('display', 'block');
 
-        // FIX: Added explicit styles for these images for basic display
-        const headerSliderBefore = document.querySelector('[data-img-id="header-slider-before"]');
-        if (headerSliderBefore) {
-            headerSliderBefore.setAttribute('src', imageData.headerSlider.before);
-            headerSliderBefore.style.width = '100%';
-            headerSliderBefore.style.height = 'auto';
-            headerSliderBefore.style.display = 'block';
-        }
+        document.querySelector('[data-img-id="header-slider-after"]')?.setAttribute('src', imageData.headerSlider.after);
+        document.querySelector('[data-img-id="header-slider-after"]')?.style.setProperty('width', '100%');
+        document.querySelector('[data-img-id="header-slider-after"]')?.style.setProperty('height', 'auto');
+        document.querySelector('[data-img-id="header-slider-after"]')?.style.setProperty('display', 'block');
 
-        const headerSliderAfter = document.querySelector('[data-img-id="header-slider-after"]');
-        if (headerSliderAfter) {
-            headerSliderAfter.setAttribute('src', imageData.headerSlider.after);
-            headerSliderAfter.style.width = '100%';
-            headerSliderAfter.style.height = 'auto';
-            headerSliderAfter.style.display = 'block';
-        }
+        document.querySelector('[data-img-id="btob-before"]')?.setAttribute('src', imageData.boringToBright.before);
+        document.querySelector('[data-img-id="btob-before"]')?.style.setProperty('width', '100%');
+        document.querySelector('[data-img-id="btob-before"]')?.style.setProperty('height', 'auto');
+        document.querySelector('[data-img-id="btob-before"]')?.style.setProperty('display', 'block');
 
-        const btobBefore = document.querySelector('[data-img-id="btob-before"]');
-        if (btobBefore) {
-            btobBefore.setAttribute('src', imageData.boringToBright.before);
-            btobBefore.style.width = '100%';
-            btobBefore.style.height = 'auto';
-            btobBefore.style.display = 'block';
-        }
-        
         const btobAfterCatalog = document.querySelector('[data-catalog-id="btob-after"]');
         if (btobAfterCatalog) { imageData.boringToBright.after.forEach((src, index) => {
             const img = document.createElement('img'); img.src = src;
-            // FIX: Added inline styles for basic image display
             img.style.width = '100%';
             img.style.height = 'auto';
             img.style.display = 'block';
@@ -87,7 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const itemsHtml = [];
             for (let i = 0; i < imageArray.length; i += 2) {
                 const img1 = imageArray[i]; const img2 = imageArray[i + 1] || img1;
-                // FIX: Added inline styles for basic image display
                 itemsHtml.push(`<div class="catalog"><img src="${img1}" class="active" alt="${carouselId} image" style="width: 100%; height: auto; display: block;"><img src="${img2}" alt="${carouselId} image" style="width: 100%; height: auto; display: block;"></div>`);
             }
             carousel.innerHTML = itemsHtml.join('') + itemsHtml.join('');
@@ -164,97 +150,99 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.fade-in-section').forEach(section => { observer.observe(section); });
 
 
- // ===================================================================================
-// == NETLIFY FORMS INTEGRATION: Form submission handler ==
-// ===================================================================================
+    // ===================================================================================
+    // == SUPABASE INTEGRATION: Form submission handler (NEW) ==
+    // ===================================================================================
 
-document.addEventListener("DOMContentLoaded", () => {
-  const contactForm = document.getElementById("contactForm");
-  const formMessage = document.getElementById("formMessage"); // Inline feedback
-  const submissionPopup = document.getElementById("submission-popup"); // Pop-up message
+    // !!! IMPORTANT: Replace with your actual Supabase Project URL and Anon Key !!!
+    const SUPABASE_URL = 'YOUR_SUPABASE_PROJECT_URL'; // e.g., 'https://your-project-id.supabase.co'
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // e.g., 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+    const SUPABASE_TABLE_NAME = 'contact_messages'; // Make sure this table exists in your Supabase DB with 'name', 'email', 'message' columns.
 
-  if (contactForm) {
-    contactForm.addEventListener("submit", async (event) => {
-      event.preventDefault(); // Prevent default form submission
+    const { createClient } = supabase;
+    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-      formMessage.textContent = "Sending...";
-      formMessage.style.color = "blue";
+    document.addEventListener("DOMContentLoaded", () => {
+        const contactForm = document.getElementById("contactForm");
+        const formMessage = document.getElementById("formMessage"); // Inline feedback
+        const submissionPopup = document.getElementById("submission-popup"); // Pop-up message
 
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const message = document.getElementById("message").value.trim();
+        if (contactForm) {
+            contactForm.addEventListener("submit", async (event) => {
+                event.preventDefault(); // Prevent default form submission
 
-      // Basic client-side validation
-      if (!name || !email || !message) {
-        formMessage.textContent = "Please fill in all fields.";
-        formMessage.style.color = "red";
-        return;
-      }
+                formMessage.textContent = "Sending...";
+                formMessage.style.color = "blue";
 
-      // Create FormData object from the form
-      const formData = new FormData(contactForm);
+                const name = document.getElementById("name").value.trim();
+                const email = document.getElementById("email").value.trim();
+                const message = document.getElementById("message").value.trim();
 
-      try {
-        // Submit form data to Netlify Forms
-        const response = await fetch("/", {
-          method: "POST",
-          body: formData,
-        });
+                // Basic client-side validation
+                if (!name || !email || !message) {
+                    formMessage.textContent = "Please fill in all fields.";
+                    formMessage.style.color = "red";
+                    return;
+                }
 
-        if (response.ok) {
-          console.log("Form submitted successfully to Netlify.");
-          formMessage.textContent = ""; // Clear inline text
-          contactForm.reset(); // Reset the form
+                try {
+                    const { error } = await supabaseClient
+                        .from(SUPABASE_TABLE_NAME)
+                        .insert([
+                            { name: name, email: email, message: message }
+                        ]);
 
-          // Show success popup
-          if (submissionPopup) {
-            submissionPopup.textContent = "Message sent successfully!";
-            submissionPopup.style.backgroundColor = "#28a745"; // Green
-            submissionPopup.style.opacity = "1";
-            submissionPopup.style.visibility = "visible";
+                    if (error) {
+                        console.error("Supabase submission error:", error.message);
+                        formMessage.textContent = `Error: ${error.message}`;
+                        formMessage.style.color = "red";
 
-            setTimeout(() => {
-              submissionPopup.style.opacity = "0";
-              submissionPopup.style.visibility = "hidden";
-            }, 2000);
-          }
+                        if (submissionPopup) {
+                            submissionPopup.textContent = `Error: ${error.message}`;
+                            submissionPopup.style.backgroundColor = "#dc3545"; // Red
+                            submissionPopup.style.opacity = "1";
+                            submissionPopup.style.visibility = "visible";
+                            setTimeout(() => {
+                                submissionPopup.style.opacity = "0";
+                                submissionPopup.style.visibility = "hidden";
+                            }, 3000);
+                        }
+                    } else {
+                        console.log("Form submitted successfully to Supabase.");
+                        formMessage.textContent = ""; // Clear inline text
+                        contactForm.reset(); // Reset the form
+
+                        if (submissionPopup) {
+                            submissionPopup.textContent = "Message sent successfully!";
+                            submissionPopup.style.backgroundColor = "#28a745"; // Green
+                            submissionPopup.style.opacity = "1";
+                            submissionPopup.style.visibility = "visible";
+
+                            setTimeout(() => {
+                                submissionPopup.style.opacity = "0";
+                                submissionPopup.style.visibility = "hidden";
+                            }, 2000);
+                        }
+                    }
+                } catch (error) {
+                    console.error("Network error during submission:", error);
+                    formMessage.textContent = "Network error. Please try again.";
+                    formMessage.style.color = "red";
+
+                    if (submissionPopup) {
+                        submissionPopup.textContent = "Network error!";
+                        submissionPopup.style.backgroundColor = "#dc3545"; // Red
+                        submissionPopup.style.opacity = "1";
+                        submissionPopup.style.visibility = "visible";
+                        setTimeout(() => {
+                            submissionPopup.style.opacity = "0";
+                            submissionPopup.style.visibility = "hidden";
+                        }, 3000);
+                    }
+                }
+            });
         } else {
-          const errorText = await response.text();
-          console.error("Netlify Form submission error:", response.status, errorText);
-
-          formMessage.textContent = `Error submitting form. Status: ${response.status}`;
-          formMessage.style.color = "red";
-
-          // Show error popup
-          if (submissionPopup) {
-            submissionPopup.textContent = `Error: ${response.status}`;
-            submissionPopup.style.backgroundColor = "#dc3545"; // Red
-            submissionPopup.style.opacity = "1";
-            submissionPopup.style.visibility = "visible";
-            setTimeout(() => {
-              submissionPopup.style.opacity = "0";
-              submissionPopup.style.visibility = "hidden";
-            }, 3000);
-          }
+            console.error("Form with ID 'contactForm' not found, Supabase integration aborted.");
         }
-      } catch (error) {
-        console.error("Network error during submission:", error);
-        formMessage.textContent = "Network error. Please try again.";
-        formMessage.style.color = "red";
-
-        if (submissionPopup) {
-          submissionPopup.textContent = "Network error!";
-          submissionPopup.style.backgroundColor = "#dc3545"; // Red
-          submissionPopup.style.opacity = "1";
-          submissionPopup.style.visibility = "visible";
-          setTimeout(() => {
-            submissionPopup.style.opacity = "0";
-            submissionPopup.style.visibility = "hidden";
-          }, 3000);
-        }
-      }
     });
-  } else {
-    console.error("Form with ID 'contactForm' not found, Netlify Forms integration aborted.");
-  }
 });
