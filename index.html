@@ -11,7 +11,7 @@
   <!-- Link to your external CSS file -->
   <link rel="stylesheet" href="style.css">
 
-  <!-- Supabase CDN (NEW) -->
+  <!-- Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 </head>
@@ -71,7 +71,7 @@
   <section id="contact" class="section contact fade-in-section">
     <h2 class="section-title">Work With Me</h2>
     <p class="section-subtitle">Have a project in mind or want to learn more? Send me a message and I'll get back to you shortly.</p>
-    <!-- MODIFIED: Removed Netlify form attributes -->
+    <!-- IMPORTANT: Ensure there is NO 'action' attribute here -->
     <form id="contactForm" method="POST"> 
       <input type="text" id="name" name="name" placeholder="Your Name" required />
       <input type="email" id="email" name="email" placeholder="Your Email" required />
