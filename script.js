@@ -151,25 +151,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // ===================================================================================
-    // == SUPABASE INTEGRATION: Form submission handler (NEW) ==
+    // == SUPABASE INTEGRATION: Form submission handler ==
     // ===================================================================================
 
-    // !!! IMPORTANT: Your actual Supabase Project URL and Anon Key are now inserted here !!!
     const SUPABASE_URL = 'https://avjeorytrrfnctkeetap.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2amVvcnl0cnJmbmN0a2VldGFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwMDI2MzAsImV4cCI6MjA3MjU3ODYzMH0.-3feKl1AefFW2A-Qi_sB0BoNyCvhyomIXt6031Ni0dg';
-    const SUPABASE_TABLE_NAME = 'contact_messages'; // Make sure this table exists in your Supabase DB with 'name', 'email', 'message' columns.
+    const SUPABASE_TABLE_NAME = 'contact_messages'; 
 
     const { createClient } = supabase;
     const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     document.addEventListener("DOMContentLoaded", () => {
         const contactForm = document.getElementById("contactForm");
-        const formMessage = document.getElementById("formMessage"); // Inline feedback
-        const submissionPopup = document.getElementById("submission-popup"); // Pop-up message
+        const formMessage = document.getElementById("formMessage");
+        const submissionPopup = document.getElementById("submission-popup");
 
         if (contactForm) {
+            console.log("Contact form found. Attaching submit listener."); // DEBUG
             contactForm.addEventListener("submit", async (event) => {
+                console.log("Form submit event detected."); // DEBUG
                 event.preventDefault(); // Prevent default form submission
+                console.log("Default form submission prevented."); // DEBUG
 
                 formMessage.textContent = "Sending...";
                 formMessage.style.color = "blue";
@@ -178,12 +180,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const email = document.getElementById("email").value.trim();
                 const message = document.getElementById("message").value.trim();
 
-                // Basic client-side validation
                 if (!name || !email || !message) {
                     formMessage.textContent = "Please fill in all fields.";
                     formMessage.style.color = "red";
+                    console.log("Client-side validation failed: fields empty."); // DEBUG
                     return;
                 }
+                console.log("Client-side validation passed. Attempting Supabase insert."); // DEBUG
 
                 try {
                     const { error } = await supabaseClient
@@ -199,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         if (submissionPopup) {
                             submissionPopup.textContent = `Error: ${error.message}`;
-                            submissionPopup.style.backgroundColor = "#dc3545"; // Red
+                            submissionPopup.style.backgroundColor = "#dc3545";
                             submissionPopup.style.opacity = "1";
                             submissionPopup.style.visibility = "visible";
                             setTimeout(() => {
@@ -209,12 +212,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     } else {
                         console.log("Form submitted successfully to Supabase.");
-                        formMessage.textContent = ""; // Clear inline text
-                        contactForm.reset(); // Reset the form
+                        formMessage.textContent = "";
+                        contactForm.reset();
 
                         if (submissionPopup) {
                             submissionPopup.textContent = "Message sent successfully!";
-                            submissionPopup.style.backgroundColor = "#28a745"; // Green
+                            submissionPopup.style.backgroundColor = "#28a745";
                             submissionPopup.style.opacity = "1";
                             submissionPopup.style.visibility = "visible";
 
@@ -231,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     if (submissionPopup) {
                         submissionPopup.textContent = "Network error!";
-                        submissionPopup.style.backgroundColor = "#dc3545"; // Red
+                        submissionPopup.style.backgroundColor = "#dc3545";
                         submissionPopup.style.opacity = "1";
                         submissionPopup.style.visibility = "visible";
                         setTimeout(() => {
