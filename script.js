@@ -155,8 +155,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // ===================================================================================
 
     // !!! IMPORTANT: Replace with your actual Supabase Project URL and Anon Key !!!
-    const SUPABASE_URL = 'YOUR_SUPABASE_PROJECT_URL'; // e.g., 'https://your-project-id.supabase.co'
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // e.g., 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+    const SUPABASE_URL = 'https://avjeorytrrfnctkeetap.supabase.co'; // e.g., 'https://your-project-id.supabase.co'
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2amVvcnl0cnJmbmN0a2VldGFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwMDI2MzAsImV4cCI6MjA3MjU3ODYzMH0.-3feKl1AefFW2A-Qi_sB0BoNyCvhyomIXt6031Ni0dg'; // e.g., 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
     const SUPABASE_TABLE_NAME = 'contact_messages'; // Make sure this table exists in your Supabase DB with 'name', 'email', 'message' columns.
 
     const { createClient } = supabase;
